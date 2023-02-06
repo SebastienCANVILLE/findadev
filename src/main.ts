@@ -7,7 +7,7 @@ async function bootstrap() {
   const app = await NestFactory.create(AppModule);
   const config = new DocumentBuilder()
     .setTitle('findadev')
-    .setDescription('Findadev API description')
+    .setDescription('findadev API description')
     .setVersion('1.0')
     .addTag('dev')
     .build();
