@@ -5,21 +5,19 @@ import { AppModule } from './app.module';
 
 async function bootstrap() {
   const app = await NestFactory.create(AppModule);
-
   const config = new DocumentBuilder()
-    .setTitle('Cats example')
-    .setDescription('The cats API description')
+    .setTitle('findadev')
+    .setDescription('findadev API description')
     .setVersion('1.0')
-    .addTag('cats')
+    .addTag('dev')
     .build();
   const document = SwaggerModule.createDocument(app, config);
   SwaggerModule.setup('api', app, document);
-  
   app.useGlobalPipes(new ValidationPipe({
     // retire tout les champs qui ne sont pas déclaré dans la dto
     whitelist: true,
     // rejette les requêtes qui contiennent des champs non déclaré dans la dto
-    forbidNonWhitelisted: true, 
+    forbidNonWhitelisted: true,
 
     transform: true
     //permet la transformation format date
