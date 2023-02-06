@@ -1,1 +1,4 @@
-export class User {}
+export class User {
+    langage: any;
+    competence: any;
+}
