@@ -2,8 +2,6 @@ import { Module } from '@nestjs/common';
 import { AppController } from './app.controller';
 import { AppService } from './app.service';
 import { UsersModule } from './users/users.module';
-import { ProfilsModule } from './profils/profils.module';
-import { PresentationsModule } from './presentations/presentations.module';
 import { CompetencesModule } from './competences/competences.module';
 import { AmisModule } from './amis/amis.module';
 import { LangagesModule } from './langages/langages.module';
@@ -23,10 +21,10 @@ import { DataSource } from 'typeorm';
     password: process.env.DB_PASSWORD,
     database: process.env.DB_NAME,
     entities: [],
-    synchronize: false,
+    synchronize: true,
     logging: false
   }),
-  UsersModule, ProfilsModule, PresentationsModule, CompetencesModule, AmisModule, LangagesModule, AuthModule],
+  UsersModule, CompetencesModule, AmisModule, LangagesModule, AuthModule],
 controllers: [AppController],
 providers: [AppService],
 })
