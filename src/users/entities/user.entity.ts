@@ -3,6 +3,7 @@ import { Entity, Column, PrimaryGeneratedColumn, BaseEntity, OneToMany } from 't
 import { Competence } from 'src/competences/entities/competence.entity';
 import { Ami } from 'src/amis/entities/ami.entity';
 import { Langage } from 'src/langages/entities/langage.entity';
+import { Exclude } from 'class-transformer';
 
 
 @Entity('users')
@@ -30,6 +31,7 @@ export class User extends BaseEntity {
     email: string;
 
     @Column()
+    @Exclude()
     password: string;
 
     @Column()
@@ -54,6 +56,7 @@ export class User extends BaseEntity {
     presentation: string;
 
     @Column()
+    @Exclude()
     salt: string;
 
     @Column({
@@ -61,6 +64,7 @@ export class User extends BaseEntity {
         enum: UserRoleEnum,
         default: UserRoleEnum.USER
     })
+    @Exclude()
     role: string;
 
     @OneToMany(() => Competence, competence => competence.users)
