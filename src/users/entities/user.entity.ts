@@ -1,5 +1,5 @@
 import { UserRoleEnum } from 'src/enum/user-role.enum';
-import { Entity, Column, PrimaryGeneratedColumn, BaseEntity, OneToMany } from 'typeorm';
+import { Entity, Column, PrimaryGeneratedColumn, BaseEntity } from 'typeorm';
 import { Competence } from 'src/competences/entities/competence.entity';
 import { Ami } from 'src/amis/entities/ami.entity';
 import { Langage } from 'src/langages/entities/langage.entity';
