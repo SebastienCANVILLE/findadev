@@ -10,6 +10,9 @@ import { TypeOrmModule } from '@nestjs/typeorm';
 import { ConfigModule } from '@nestjs/config';
 import { DataSource } from 'typeorm';
 import { User } from './users/entities/user.entity';
+import { Competence } from './competences/entities/competence.entity';
+import { Langage } from './langages/entities/langage.entity';
+import { Ami } from './amis/entities/ami.entity';
 
 @Module({
   imports: [
@@ -21,8 +24,8 @@ import { User } from './users/entities/user.entity';
       username: process.env.DB_USERNAME,
       password: process.env.DB_PASSWORD,
       database: process.env.DB_NAME,
-      entities: [User],
-      synchronize: false,
+      entities: [User, Competence, Langage, Ami],
+      synchronize: true,
       logging: false
     }),
     UsersModule, CompetencesModule, AmisModule, LangagesModule, AuthModule],

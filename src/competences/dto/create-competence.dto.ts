@@ -4,6 +4,6 @@ export class CreateCompetenceDto {
 
     @IsNotEmpty()
     @IsString()
-    name: string;
+    name: string
 
 }
