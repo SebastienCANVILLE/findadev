@@ -2,7 +2,7 @@ import { User } from 'src/users/entities/user.entity';
 import { Entity, Column, PrimaryGeneratedColumn, ManyToOne, BaseEntity } from 'typeorm';
 
 
-@Entity()
+@Entity('competences')
 export class Competence extends BaseEntity {
 
     @PrimaryGeneratedColumn()

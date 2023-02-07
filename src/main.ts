@@ -5,6 +5,7 @@ import { AppModule } from './app.module';
 
 async function bootstrap() {
   const app = await NestFactory.create(AppModule);
+
   const config = new DocumentBuilder()
     .setTitle('findadev')
     .setDescription('findadev API description')
@@ -13,13 +14,14 @@ async function bootstrap() {
     .build();
   const document = SwaggerModule.createDocument(app, config);
   SwaggerModule.setup('api', app, document);
+
   app.useGlobalPipes(new ValidationPipe({
     // retire tout les champs qui ne sont pas déclaré dans la dto
-    whitelist: true,
+    //whitelist: true,
     // rejette les requêtes qui contiennent des champs non déclaré dans la dto
-    forbidNonWhitelisted: true,
+    //forbidNonWhitelisted: true,
 
-    transform: true
+    //transform: true
     //permet la transformation format date
   }));
   await app.listen(3000);

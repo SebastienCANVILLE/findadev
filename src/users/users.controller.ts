@@ -23,8 +23,8 @@ export class UsersController {
   }
 
   @Get('search/:pseudo')
-  async findByName(@Param('pseudo') pseudo: string) {   // à tester  
-    return await this.usersService.findByName(pseudo);
+  async findByPseudo(@Param('pseudo') pseudo: string) {   // à tester  
+    return await this.usersService.findByPseudo(pseudo);
   }
 
 

@@ -24,7 +24,9 @@ export class User extends BaseEntity {
     })
     pseudo: string;
 
-    @Column()
+    @Column({
+        unique: true
+    })
     email: string;
 
     @Column()
