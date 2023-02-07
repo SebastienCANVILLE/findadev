@@ -22,7 +22,7 @@ import { User } from './users/entities/user.entity';
     password: process.env.DB_PASSWORD,
     database: process.env.DB_NAME,
     entities: [User],
-    synchronize: false,
+    synchronize: true,
     logging: false
   }),
   UsersModule, CompetencesModule, AmisModule, LangagesModule, AuthModule],
