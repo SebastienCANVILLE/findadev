@@ -23,4 +23,5 @@ export class Competence extends BaseEntity {
 
     @ManyToOne(type => Competence, competence => competence.user)
     competences: Competence[];
+
 }

@@ -18,4 +18,5 @@ export class Langage extends BaseEntity {
 
     @ManyToOne(type => Langage, langage => langage.user)
     langages: Langage[];
+
 }
