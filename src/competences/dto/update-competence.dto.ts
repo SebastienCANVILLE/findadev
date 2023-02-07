@@ -5,19 +5,7 @@ import { CreateCompetenceDto } from './create-competence.dto';
 export class UpdateCompetenceDto extends PartialType(CreateCompetenceDto) {
 
     @IsOptional()
-    FrontEnd: boolean;
-
-    @IsOptional()
-    BackEnd: boolean;
-
-    @IsOptional()
-    FullStack: boolean;
-
-    @IsOptional()
-    Runtime: boolean;
-
-    @IsOptional()
-    FrameWork: boolean;
+    name: string
 
 }
 

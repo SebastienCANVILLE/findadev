@@ -1,22 +1,16 @@
 import { User } from 'src/users/entities/user.entity';
 import { Entity, Column, PrimaryGeneratedColumn, ManyToOne, BaseEntity } from 'typeorm';
 
-@Entity()
+@Entity('langages')
 export class Langage extends BaseEntity {
 
     @PrimaryGeneratedColumn()
     id: number;
 
     @Column()
-    JavaSrispt: boolean;
+    name: string;
 
-    @Column()
-    React: boolean;
-
-    @Column()
-    NodeJs: boolean;
-
-    @ManyToOne(type => Langage, langage => langage.user)
-    langages: Langage[];
+    @ManyToOne(() => User, user => user.langages)
+    users: User[];
 
 }

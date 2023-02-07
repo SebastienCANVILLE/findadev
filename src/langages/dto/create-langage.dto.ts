@@ -1,21 +1,11 @@
-export class CreateLangageDto { }
-import { Entity, Column, PrimaryGeneratedColumn, ManyToOne } from 'typeorm';
-import { Langage } from '../entities/langage.entity';
+import { IsNotEmpty, IsString } from "class-validator";
 
-@Entity()
-export class User {
-    @PrimaryGeneratedColumn()
-    id: number;
 
-    @Column({ default: false })
-    JavaScrispt: boolean;
+export class CreateLangageDto {
 
-    @Column({ default: false })
-    React: boolean;
+    @IsNotEmpty()
+    @IsString()
+    name: string
 
-    @Column({ default: false })
-    NodeJs: boolean;
-
-    @ManyToOne(type => Langage, langage => langage.user)
-    langages: Langage[];
 }
+

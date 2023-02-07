@@ -1,25 +1,9 @@
-export class CreateCompetenceDto { }
-import { Entity, Column, PrimaryGeneratedColumn, ManyToOne } from 'typeorm';
-//import { Competence } from '../entities/competence.entity';
+import { IsNotEmpty, IsString } from 'class-validator';
 
-@Entity()
-export class User {
-    @PrimaryGeneratedColumn()
-    id: number;
+export class CreateCompetenceDto {
 
-    @Column({ default: false })
-    FrontEnd: boolean;
-
-    @Column({ default: false })
-    BackEnd: boolean;
-
-    @Column({ default: false })
-    FullStack: boolean;
-
-    @Column({ default: false })
-    RunTime: boolean;
-
-    @Column({ default: false })
-    FrameWork: boolean;
+    @IsNotEmpty()
+    @IsString()
+    name: string;
 
 }

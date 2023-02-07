@@ -1,4 +1,6 @@
+import { User } from 'src/users/entities/user.entity';
 import { Entity, Column, PrimaryGeneratedColumn, ManyToOne, BaseEntity } from 'typeorm';
+
 
 @Entity()
 export class Competence extends BaseEntity {
@@ -7,21 +9,9 @@ export class Competence extends BaseEntity {
     id: number;
 
     @Column()
-    FrontEnd: boolean;
+    name: string;
 
-    @Column()
-    BackEnd: boolean;
-
-    @Column()
-    FullStack: boolean;
-
-    @Column()
-    RunTime: boolean;
-
-    @Column()
-    FrameWork: boolean;
-
-    @ManyToOne(type => Competence, competence => competence.user)
-    competences: Competence[];
+    @ManyToOne(() => User, user => user.competences)
+    users: User[];
 
 }
