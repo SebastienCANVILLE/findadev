@@ -1,26 +1,38 @@
 import { Injectable } from '@nestjs/common';
 import { CreateCompetenceDto } from './dto/create-competence.dto';
 import { UpdateCompetenceDto } from './dto/update-competence.dto';
+import { Competence } from './entities/competence.entity';
+
 
 @Injectable()
 export class CompetencesService {
-  create(createCompetenceDto: CreateCompetenceDto) {
-    return 'This action adds a new competence';
+  async createCompetences(createCompetenceDto: CreateCompetenceDto | any): Promise<Competence> {
+    const newCompetence = await Competence.save(createCompetenceDto);
+    return newCompetence;
   }
 
-  findAll() {
-    return `This action returns all competences`;
+  async findAll() {
+    return await Competence.find();
   }
 
-  findOne(id: number) {
-    return `This action returns a #${id} competence`;
+  async findOne(id: number): Promise<Competence> {
+    return await Competence.findOneBy({ id })
   }
 
-  update(id: number, updateCompetenceDto: UpdateCompetenceDto) {
-    return `This action updates a #${id} competence`;
-  }
+  async update(id: number, updateCompetenceDto: UpdateCompetenceDto | any): Promise<Competence> {
+    const newCompetence = await Competence.update(id, updateCompetenceDto);
 
-  remove(id: number) {
-    return `This action removes a #${id} competence`;
+    if (newCompetence) {
+      return await Competence.findOneBy({ id });
+    };
+    return undefined;
+  };
+
+  async remove(id: number | any) {
+    const competence = await Competence.remove(id);
+    if (competence) {
+      return `This action removes a #${id} competence`;
+    };
+    return undefined;
   }
 }
