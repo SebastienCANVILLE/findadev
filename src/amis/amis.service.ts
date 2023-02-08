@@ -9,33 +9,18 @@ import { Ami } from './entities/ami.entity';
 
 @Injectable()
 export class AmisService {
-  userService: any;
-  existingRelationAmi: any;
-  async askFriend(id: number): Promise<void> {
+  async askFriend(user:User,ami:User): Promise<Ami> {
   
-    const user = await this.userService.findOneById(id);
-    const ami = await this.userService.findOneById(id);
-    
     if (!user || !ami) {
       throw new BadRequestException('User ou ami pas trouvé');
     }
-  
-    const existingRelationAmi = await this.userService.findOne({
-      where: [
-        { user, ami: ami },
-        { user: ami, ami: user }
-      ]
-    });
-    
-    if (existingRelationAmi) {
-      throw new BadRequestException('relation ami existe déjà');
-    }
-    const relationAmi = new existingRelationAmi();
+   
+    const relationAmi = new Ami();
     relationAmi.user = user;
     relationAmi.ami = ami;
-    relationAmi.askFriendRequest = 'envoi demande';
     
-    await this.existingRelationAmi.save(relationAmi);
+    return await relationAmi.save();
+    
   };
 
   async findAll() {

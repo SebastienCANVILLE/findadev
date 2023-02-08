@@ -1,6 +1,7 @@
 import { Controller, Get, Post, Body, Patch, Param, Delete } from '@nestjs/common';
-import { Request } from '@nestjs/common/decorators';
+import { Request, UseGuards } from '@nestjs/common/decorators';
 import { ConflictException, NotFoundException } from '@nestjs/common/exceptions';
+import { JwtAuthGuard } from 'src/auth/jwt-auth.guard';
 import { UsersService } from 'src/users/users.service';
 import { FindRelationsNotFoundError } from 'typeorm';
 import { AmisService } from './amis.service';
@@ -13,22 +14,23 @@ export class AmisController {
     private readonly amisService: AmisService,
     private readonly usersService: UsersService,
   ) { };
-
+  @UseGuards(JwtAuthGuard)
   @Post(':id')
   async create(@Param('id') id: string, @Request() req) {
-    console.log(req);
+    console.log('test', req.user.userId);
     
-    const user = await this.usersService.findOne(req.userId)//req.user.userId;
+    const user = await this.usersService.findOne(req.user.userId)//req.user.userId;
     const ami = await this.usersService.findOne(+id)//req.ami.amiId;
+console.log(user,ami);
 
-  /*   if (user === ami) {
+    /*  if (user === ami) {
       throw new ConflictException('non valide')
     };
     if (ami === null) {
       throw new NotFoundException('id non trouvé')
-    };
+    }; */
     console.log(req);
-    return this.amisService.askFriend(+id); */
+    return  await this.amisService.askFriend(user,ami); 
   }
 //pour trouver les utilisateurs avec les noms d'utilisateur spécifiés,
 // puis trouve la relation d'amitié entre les 2 users.
