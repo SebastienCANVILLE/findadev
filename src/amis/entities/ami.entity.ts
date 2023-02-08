@@ -7,11 +7,8 @@ export class Ami extends BaseEntity {
     @PrimaryGeneratedColumn()
     id: number
 
-    @Column()
-    friendRequest: string
-
-    @Column()
-    reponse: string
+    @Column({default: false})
+    isFriend: boolean
 
     @ManyToOne(() => User, user => user.amis)
     user: User;

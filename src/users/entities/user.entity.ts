@@ -75,5 +75,6 @@ export class User extends BaseEntity {
 
     @OneToMany(() => Ami, ami => ami.user) //{ eager: true }
     amis: Ami[]
+  status: any;
 
 }

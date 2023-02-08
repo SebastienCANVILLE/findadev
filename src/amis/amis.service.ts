@@ -1,19 +1,49 @@
-import { Injectable } from '@nestjs/common';
+import { BadRequestException, Injectable } from '@nestjs/common';
+import { User } from 'src/users/entities/user.entity';
+import { UsersService } from 'src/users/users.service';
+import { RelationId } from 'typeorm';
 import { CreateAmiDto } from './dto/create-ami.dto';
 import { UpdateAmiDto } from './dto/update-ami.dto';
+import { Ami } from './entities/ami.entity';
+
 
 @Injectable()
 export class AmisService {
-  create(createAmiDto: CreateAmiDto) {
-    return 'This action adds a new ami';
+  userService: any;
+  existingRelationAmi: any;
+  async askFriend(id: number): Promise<void> {
+  
+    const user = await this.userService.findOneById(id);
+    const ami = await this.userService.findOneById(id);
+    
+    if (!user || !ami) {
+      throw new BadRequestException('User ou ami pas trouvé');
+    }
+  
+    const existingRelationAmi = await this.userService.findOne({
+      where: [
+        { user, ami: ami },
+        { user: ami, ami: user }
+      ]
+    });
+    
+    if (existingRelationAmi) {
+      throw new BadRequestException('relation ami existe déjà');
+    }
+    const relationAmi = new existingRelationAmi();
+    relationAmi.user = user;
+    relationAmi.ami = ami;
+    relationAmi.askFriendRequest = 'envoi demande';
+    
+    await this.existingRelationAmi.save(relationAmi);
+  };
+
+  async findAll() {
+    return await Ami.find();
   }
 
-  findAll() {
-    return `This action returns all amis`;
-  }
-
-  findOne(id: number) {
-    return `This action returns a #${id} ami`;
+  async findOne(id: number) {
+    return await Ami.findOneBy({id:id});
   }
 
   update(id: number, updateAmiDto: UpdateAmiDto) {
