@@ -28,9 +28,12 @@ export class UsersService {
     return await User.find();
   }
 
-  async findOne(id: number) { // recherche d'un user par id
-    return await User.findOneBy({ id });
+
+  async findUserByID(id: number): Promise<any> { // recherche d'un user par id
+     return await User.findOneBy({ id })
+
   }
+
 
   async findByPseudo(pseudo: string) {  // recherche par pseudo
     return await User.findOneBy({ pseudo });
@@ -60,9 +63,9 @@ export class UsersService {
     await User.delete({ id });
 
     if (dataDeleted) {
-      return dataDeleted ;
+      return dataDeleted;
     }
-    
+
     return undefined;
   }
 

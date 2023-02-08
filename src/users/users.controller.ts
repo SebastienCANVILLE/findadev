@@ -1,4 +1,4 @@
-import { Controller, Get, Post, Body, Param, Delete, ClassSerializerInterceptor, NotFoundException, HttpException, HttpStatus } from '@nestjs/common';
+import { Controller, Get, Post, Body, Param, Delete, ClassSerializerInterceptor, NotFoundException, HttpException, HttpStatus, ParseIntPipe } from '@nestjs/common';
 import { UsersService } from './users.service';
 import { CreateUserDto } from './dto/create-user.dto';
 import { Patch, Req, UseGuards, UseInterceptors } from '@nestjs/common/decorators';
@@ -18,27 +18,29 @@ export class UsersController {
     return this.usersService.create(createUserDto);
   }
 
+
   @Get()
   findAll() {
     return this.usersService.findAll();
   }
 
+  
   @Get(':id')
-  findOne(@Param('id') id: string) {
-    return this.usersService.findOne(+id);
+  findUserByID(@Param('id') id: string) {
+    
+    const userExist = this.usersService.findUserByID(+id);
+
+    if (!userExist) {
+      throw new NotFoundException ("L'utilisateur n'existe pas");
+    }
+    return userExist;
+    
   }
 
   @Get('search/:pseudo')
   async findByPseudo(@Param('pseudo') pseudo: string) {  // à tester  
     return await this.usersService.findByPseudo(pseudo);
   }
-
-  
- /*  @Patch(':id')
-  update(@Param('id') id: string, @Body() updateUserDto: UpdateUserDto) {
-    return this.usersService.update(+id, updateUserDto);
-  }  */
-
 
 
   @UseGuards(JwtAuthGuard)
@@ -49,6 +51,7 @@ export class UsersController {
     const userLog = req.user.userId
 
     const updateUser = await this.usersService.update(userLog, updateUserDto,);
+    
   
     return{
       statusCode: 201,
@@ -66,7 +69,7 @@ export class UsersController {
 
     const id = req.user.userId
     
-    const user = await this.usersService.findOne(id);
+    const user = await this.usersService.findUserByID(id);
 
     if (!user) {
       throw new HttpException(`L'user demandé n'existe pas`, HttpStatus.NOT_FOUND);
