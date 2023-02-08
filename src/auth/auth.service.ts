@@ -12,25 +12,33 @@ export class AuthService {
 
     async validateUser(pseudo: string, password: string): Promise<any> {
 
-        const user = await this.usersService.findByPseudo(pseudo); 
-        
+        const user = await this.usersService.findByPseudo(pseudo);
+
         const compareHashPassword = await bcrypt.compare(password, user.password)
-console.log(user, compareHashPassword);
+
 
         if (user && compareHashPassword) {
             const { password, ...result } = user;
+            console.log(result);
             return result;
         }
         return null;
     }
 
     async login(user: any) {
-        
-        const payload = { pseudo: user.pseudo, sub: user.userId }; 
-        return {
-            access_token: this.jwtService.sign(payload),
-        };
-    }
-}
 
-//const accessToken = jwt.sign({ clientId: client.id }, accessTokenSecret);
+        const payload = { pseudo: user.pseudo, id: user.id };
+        console.log(user);
+        
+
+            return {
+                statusCode: 200,
+                message: 'Bienvenu Mister Président',
+                data: {
+                    access_token: this.jwtService.sign(payload),
+                },
+            };
+
+        }
+    }
+

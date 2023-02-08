@@ -6,4 +6,5 @@ import { CompetencesController } from './competences.controller';
   controllers: [CompetencesController],
   providers: [CompetencesService]
 })
-export class CompetencesModule {}
+
+export class CompetencesModule { }

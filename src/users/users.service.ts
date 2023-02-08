@@ -3,6 +3,7 @@ import { CreateUserDto } from './dto/create-user.dto';
 import { User } from './entities/user.entity';
 import * as bcrypt from 'bcrypt'
 import { UpdateUserDto } from './dto/update-user.dto';
+import { UserInfo } from 'os';
 
 @Injectable()
 export class UsersService {
@@ -23,20 +24,19 @@ export class UsersService {
 
   }
 
-  async findAll() : Promise<User[]> { // recherche de tous les users
+  async findAll(): Promise<User[]> { // recherche de tous les users
     return await User.find();
-  } 
-
+  }
 
   async findOne(id: number) { // recherche d'un user par id
-    return await User.findBy({ id });
+    return await User.findOneBy({ id });
   }
 
   async findByPseudo(pseudo: string) {  // recherche par pseudo
     return await User.findOneBy({ pseudo });
   }
 
-  async update(id: number, updateUserDto: UpdateUserDto) {
+  async update(id: number, updateUserDto: UpdateUserDto): Promise<User> {
 
     const updateUser = await User.findOneBy({ id: id });
 
@@ -49,13 +49,21 @@ export class UsersService {
     updateUser.region = updateUserDto.region;
     updateUser.presentation = updateUserDto.presentation;
 
-
     await User.save(updateUser);
 
-    return await User.findOneBy({ id: id });
+    return updateUser
   }
-  async remove(id: number) { // permet la suppression de l'user par l'id
-    return await User.delete({ id });
+
+  async deletedUser(id: number): Promise<User> { // permet la suppression de l'user par l'id
+
+    const dataDeleted = await User.findOneBy({ id })
+    await User.delete({ id });
+
+    if (dataDeleted) {
+      return dataDeleted ;
+    }
+    
+    return undefined;
   }
 
 }
