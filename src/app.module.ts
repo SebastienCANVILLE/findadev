@@ -13,12 +13,13 @@ import { User } from './users/entities/user.entity';
 import { Competence } from './competences/entities/competence.entity';
 import { Langage } from './langages/entities/langage.entity';
 import { Ami } from './amis/entities/ami.entity';
+import { UsersService } from './users/users.service';
 
 @Module({
   imports: [
     ConfigModule.forRoot(),
     TypeOrmModule.forRoot({
-      type: "postgres",
+      type: "postgres", 
       host: process.env.DB_HOST,
       port: 5432,
       username: process.env.DB_USERNAME,
@@ -30,6 +31,6 @@ import { Ami } from './amis/entities/ami.entity';
     }),
     UsersModule, CompetencesModule, AmisModule, LangagesModule, AuthModule],
   controllers: [AppController],
-  providers: [AppService],
+  providers: [AppService, UsersService],
 })
 export class AppModule { constructor(private dataSource: DataSource) { } }

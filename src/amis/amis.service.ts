@@ -9,6 +9,8 @@ import { Ami } from './entities/ami.entity';
 
 @Injectable()
 export class AmisService {
+  usersService: any;
+ 
   async askFriend(user:User,ami:User): Promise<Ami> {
   
     if (!user || !ami) {
@@ -22,20 +24,39 @@ export class AmisService {
     return await relationAmi.save();
     
   };
+  //pour trouver les utilisateurs avec les noms d'utilisateur spécifiés,
+  // puis trouve la relation d'amitié entre les 2 users.
 
+  async getRelationAmiStatus(user: string, ami: string) {
+    const relationAmi = await this.usersService.findByUserPseudo(user,ami)
+    if (!user || !ami) {
+      return 'user pas trouvé';
+    }
+    if (!relationAmi) {
+      return 'pas ami'
+    }
+    return relationAmi;
+  }
+
+  
   async findAll() {
     return await Ami.find();
   }
 
   async findOne(id: number) {
-    return await Ami.findOneBy({id:id});
+    return await Ami.findOneBy({ id: id })
+  }
+  async update(id: number, updateAmiDto: UpdateAmiDto) {
+    await Ami.update(id, updateAmiDto)
+    return this.findOne(id)
   }
 
-  update(id: number, updateAmiDto: UpdateAmiDto) {
-    return `This action updates a #${id} ami`;
-  }
-
-  remove(id: number) {
-    return `This action removes a #${id} ami`;
+  async remove(id: number) {
+    const dataDeleted = Ami.findBy({ id });
+    await Ami.delete(id);
+    if (dataDeleted) {
+      return dataDeleted;
+    }
+    return undefined;
   }
 }
