@@ -10,9 +10,9 @@ export class UsersService {
 
   async create(createUserDto: CreateUserDto): Promise<User> { // Promise (promet de te renvoyer un user)
 
-    if (createUserDto.password !== createUserDto.password_confirm) {
+/*     if (createUserDto.password !== createUserDto.password_confirm) {
       throw new ConflictException("Mots de passe non identiques")
-    }
+    } */
 
     const user = User.create(createUserDto)
     user.salt = await bcrypt.genSalt();
@@ -28,15 +28,33 @@ export class UsersService {
     return await User.find();
   }
 
-
-  async findUserByID(id: number): Promise<any> { // recherche d'un user par id
-     return await User.findOneBy({ id })
+  async findUserByID(id: number): Promise<User> { // recherche d'un user par id
+    return await User.findOneBy({ id : id})
 
   }
 
-
   async findByPseudo(pseudo: string) {  // recherche par pseudo
     return await User.findOneBy({ pseudo });
+  }
+
+  async findByCountry(country: string) {  // recherche par pseudo
+    return await User.findOneBy({ country });
+  }
+
+  async findByCity(city: string) {  // recherche par pseudo
+    return await User.findOneBy({ city });
+  }
+
+  async findByDepartment(department: string) {  // recherche par pseudo
+    return await User.findOneBy({ department });
+  }
+
+  async findByRegion(region: string) {  // recherche par pseudo
+    return await User.findOneBy({ region });
+  }
+
+  async findByEmail(email: string) {  // recherche par pseudo
+    return await User.findOneBy({ email });
   }
 
   async update(id: number, updateUserDto: UpdateUserDto): Promise<User> {
