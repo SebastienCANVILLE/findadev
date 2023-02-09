@@ -26,7 +26,7 @@ import { Ami } from './amis/entities/ami.entity';
       database: process.env.DB_NAME,
       entities: [User, Competence, Langage, Ami],
       synchronize: true,
-      logging: true,
+      logging: false,
     }),
     UsersModule, CompetencesModule, AmisModule, LangagesModule, AuthModule],
   controllers: [AppController],

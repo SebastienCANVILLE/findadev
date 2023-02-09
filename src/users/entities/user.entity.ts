@@ -12,9 +12,7 @@ export class User extends BaseEntity {
     @PrimaryGeneratedColumn()
     id: number;
 
-    @Column({
-        unique: true
-    })
+    @Column()
     firstname: string;
 
     @Column()
@@ -67,14 +65,14 @@ export class User extends BaseEntity {
     @Exclude()
     role: string;
 
-    @OneToMany(() => Competence, competence => competence.users)
+    @OneToMany(() => Competence, competence => competence.users, { eager: true })
     competences: Competence[]
 
-    @OneToMany(() => Langage, langage => langage.users)
+    @OneToMany(() => Langage, langage => langage.users, { eager: true })
     langages: Langage[]
 
-    @OneToMany(() => Ami, ami => ami.user) //{ eager: true }
+    @OneToMany(() => Ami, ami => ami.user, { eager: true })
     amis: Ami[]
-  status: any;
+    status: any;
 
 }
