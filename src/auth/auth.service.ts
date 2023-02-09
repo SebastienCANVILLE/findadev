@@ -16,10 +16,9 @@ export class AuthService {
 
         const compareHashPassword = await bcrypt.compare(password, user.password)
 
-
         if (user && compareHashPassword) {
             const { password, ...result } = user;
-            console.log(result);
+            //console.log(result);
             return result;
         }
         return null;
@@ -28,8 +27,6 @@ export class AuthService {
     async login(user: any) {
 
         const payload = { pseudo: user.pseudo, id: user.id };
-        console.log(user);
-        
 
             return {
                 statusCode: 200,
