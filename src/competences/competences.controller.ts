@@ -18,7 +18,7 @@ export class CompetencesController {
     const createdCompetence = await this.competencesService.createCompetences(createCompetenceDto);
     return {
       statusCode: 201,
-      data: "OK",
+      data: createdCompetence,
       message: "Created"
     }
   }
@@ -28,7 +28,7 @@ export class CompetencesController {
     const allCompetence = this.competencesService.findAll();
     return {
       statusCode: 200,
-      data: "OK",
+      data: allCompetence,
       message: "All Competence"
     }
   }
@@ -38,7 +38,7 @@ export class CompetencesController {
     const oneCompetence = this.competencesService.findOne(+id);
     return {
       statusCode: 200,
-      data: "OK",
+      data: oneCompetence,
       message: "One Competence"
     }
   }
@@ -56,7 +56,7 @@ export class CompetencesController {
     const updatedCompetence = await this.competencesService.update(+id, updateCompetenceDto);
     return {
       statusCode: 201,
-      data: "OK",
+      data: updatedCompetence,
       message: "Update Competence"
     }
   }
@@ -72,7 +72,7 @@ export class CompetencesController {
     const deletedCompetence = await existingCompetence.remove();
     return {
       statusCode: 201,
-      data: "OK",
+      data: deletedCompetence,
       message: "Deleted Competence",
     };
   }
