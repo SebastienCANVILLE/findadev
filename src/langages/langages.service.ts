@@ -1,26 +1,44 @@
 import { Injectable } from '@nestjs/common';
+import { remove } from 'lodash';
+import { async } from 'rxjs';
+import { Any } from 'typeorm';
 import { CreateLangageDto } from './dto/create-langage.dto';
 import { UpdateLangageDto } from './dto/update-langage.dto';
+import { Langage } from './entities/langage.entity';
 
 @Injectable()
 export class LangagesService {
   create(createLangageDto: CreateLangageDto) {
-    return 'This action adds a new langage';
+    throw new Error('Method not implemented.');
+  }
+  async createLangages(createLangageDto:
+    CreateLangageDto )
+    : Promise<Langage> {
+    const langage = new Langage();
+    langage.name = createLangageDto.name;
+    return await langage.save();
+    }
+
+  async findAll() {
+    return await Langage.find();
   }
 
-  findAll() {
-    return `This action returns all langages`;
+  async findOne(id: number) { 
+    return await Langage.findOneBy({id});
   }
 
-  findOne(id: number) {
-    return `This action returns a #${id} langage`;
-  }
+  async update(id: number, updateLangageDto: UpdateLangageDto | any): Promise<Langage>{
+    const newLangage = await Langage.save(updateLangageDto);
+    return await Langage.findOneBy({id});
+    }
+  
 
-  update(id: number, updateLangageDto: UpdateLangageDto) {
-    return `This action updates a #${id} langage`;
+  async remove(id: number | any) {
+    const langage = await Langage.findOneBy({id});
+    if (langage) {
+      await Langage.remove(langage);
+    }
+    }
   }
+  
 
-  remove(id: number) {
-    return `This action removes a #${id} langage`;
-  }
-}
