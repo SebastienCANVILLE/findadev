@@ -1,14 +1,18 @@
-import { Controller, Get, Post, Body, Patch, Param, Delete, BadRequestException } from '@nestjs/common';
+import { Controller, Get, Post, Body, Patch, Param, Delete, BadRequestException, UseGuards } from '@nestjs/common';
 import { ApiTags } from '@nestjs/swagger';
+import { JwtAuthGuard } from 'src/auth/jwt-auth.guard';
 import { CompetencesService } from './competences.service';
 import { CreateCompetenceDto } from './dto/create-competence.dto';
 import { UpdateCompetenceDto } from './dto/update-competence.dto';
+
+
 
 @ApiTags('Competences')
 @Controller('Competences')
 export class CompetencesController {
   constructor(private readonly competencesService: CompetencesService) { }
 
+  @UseGuards(JwtAuthGuard)
   @Post()
   async create(@Body() createCompetenceDto: CreateCompetenceDto) {
     const createdCompetence = await this.competencesService.createCompetences(createCompetenceDto);
@@ -39,6 +43,7 @@ export class CompetencesController {
     }
   }
 
+  @UseGuards(JwtAuthGuard)
   @Patch(':id')
   async update(
     @Param('id') id: number,
@@ -46,7 +51,7 @@ export class CompetencesController {
     const existingCompetence = await this.competencesService.findOne(id);
 
     if (!existingCompetence) {
-      throw new BadRequestException("Undefined");
+      throw new BadRequestException("Not Found");
     }
     const updatedCompetence = await this.competencesService.update(+id, updateCompetenceDto);
     return {
@@ -56,12 +61,13 @@ export class CompetencesController {
     }
   }
 
+  @UseGuards(JwtAuthGuard)
   @Delete(':id')
   async remove(@Param('id') id: number) {
     const existingCompetence = await this.competencesService.findOne(id);
 
     if (!existingCompetence) {
-      throw new BadRequestException("Undefined");
+      throw new BadRequestException("Not Found");
     }
     const deletedCompetence = await existingCompetence.remove();
     return {
@@ -71,5 +77,3 @@ export class CompetencesController {
     };
   }
 }
-
-
