@@ -45,22 +45,13 @@ export class UsersController {
 
 
   @Get(':id')
-<<<<<<< HEAD
   async findUserByID(@Param('id') id: string) {
 
     const userExist = await this.usersService.findUserByID(+id);
 
     if (!userExist) {
 
-      throw new HttpException("L'utilisateur n'existe pas", HttpStatus.BAD_REQUEST);
-=======
-  findUserByID(@Param('id') id: string) {
-
-    const userExist = this.usersService.findUserByID(+id);
-
-    if (!userExist) {
-      throw new NotFoundException("L'utilisateur n'existe pas");
->>>>>>> 3ef9371f1eb796aa4ec8295bf74ec506faad00b9
+      throw new HttpException("L'utilisateur n'existe pas", HttpStatus.NOT_FOUND);
     }
 
     return userExist;
@@ -69,22 +60,52 @@ export class UsersController {
 
 
   @Get('search/:pseudo')
-<<<<<<< HEAD
   async findUserByPseudo(@Param('pseudo') pseudo: string) {
 
-    const userExist = await this.usersService.findByPseudo(pseudo);
+    const pseudoExist = await this.usersService.findByPseudo(pseudo);
+
+    if (!pseudoExist) {
+
+      throw new HttpException("Le pseudo n'existe pas", HttpStatus.NOT_FOUND);
+    }
+
+    return pseudoExist;
+  }
+
+
+  @Get('country/:country')
+  async findByCountry(@Param('country') country: string) {
+
+    const countryExist = await this.usersService.findByCountry(country);
+
+    if (!countryExist) {
+
+      throw new HttpException("Pas de développeur dans ce pays", HttpStatus.NOT_FOUND);
+    }
+
+    return countryExist;
+  }
+
+
+
+
+
+
+
+  @Get('email/:email')
+  async findUserByEmail(@Param('email') email: string) {
+
+    const userExist = await this.usersService.findByEmail(email);
 
     if (!userExist) {
 
-      throw new HttpException("Le pseudo n'existe pas", HttpStatus.BAD_REQUEST);
+      throw new HttpException("L'Email n'existe pas", HttpStatus.NOT_FOUND);
     }
 
     return userExist;
-=======
-  async findByPseudo(@Param('pseudo') pseudo: string) {
-    return await this.usersService.findByPseudo(pseudo);
->>>>>>> 3ef9371f1eb796aa4ec8295bf74ec506faad00b9
   }
+
+
 
 
   @UseGuards(JwtAuthGuard)

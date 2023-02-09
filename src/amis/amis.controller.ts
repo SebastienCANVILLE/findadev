@@ -18,17 +18,10 @@ export class AmisController {
   @Post(':id')
   async create(@Param('id') id: string, @Request() req) {
     console.log('test', req.user.userId);
-<<<<<<< HEAD
-    
-    const user = await this.usersService.findUserByID(req.user.userId)//req.user.userId;
-    const ami = await this.usersService.findUserByID(+id)//req.ami.amiId;
-console.log(user,ami);
-=======
 
     const user = await this.usersService.findUserByID(req.user.userId)//req.user.userId;
     const ami = await this.usersService.findUserByID(+id)//req.ami.amiId;
     console.log(user, ami);
->>>>>>> 3ef9371f1eb796aa4ec8295bf74ec506faad00b9
 
     /*  if (user === ami) {
       throw new ConflictException('non valide')
