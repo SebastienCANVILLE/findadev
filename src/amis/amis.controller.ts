@@ -20,6 +20,7 @@ export class AmisController {
   async create(@Param('id') id: string, @Request() req) {
     console.log('test', req.user.userId);
     
+
     const user = await this.usersService.findUserByID(req.user.userId)//req.user.userId;
     const ami = await this.usersService.findUserByID(+id)//req.ami.amiId;
     console.log(user, ami);
