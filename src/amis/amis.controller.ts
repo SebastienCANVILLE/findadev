@@ -1,7 +1,6 @@
-import { Controller, Get, Post, Body, Patch, Param, Delete, ClassSerializerInterceptor } from '@nestjs/common';
+import { Controller, Get, Post, Body, Patch, Param, Delete, ClassSerializerInterceptor, HttpStatus } from '@nestjs/common';
 import { Query, Req, Request, UseGuards, UseInterceptors } from '@nestjs/common/decorators';
-import { ConflictException, NotFoundException } from '@nestjs/common/exceptions';
-import { ApiBody, ApiParam, ApiProperty } from '@nestjs/swagger';
+import { ConflictException, HttpException, NotFoundException } from '@nestjs/common/exceptions';
 import { JwtAuthGuard } from 'src/auth/jwt-auth.guard';
 import { UpdateUserDto } from 'src/users/dto/update-user.dto';
 import { UsersService } from 'src/users/users.service';
@@ -13,31 +12,34 @@ import { UpdateAmiDto } from './dto/update-ami.dto';
 @UseInterceptors(ClassSerializerInterceptor)
 @Controller('amis')
 export class AmisController {
-  friendshipRepository: any;
   constructor(
     private readonly amisService: AmisService,
     private readonly usersService: UsersService,
   ) { };
+
+  @Get(':id')
+  async findRelationAmiByID(@Param('id') id: string) {
+
+    const relationAmiExist = await this.amisService.findRelationAmiByID(+id);
+
+    if (!relationAmiExist) {
+      throw new HttpException("Lla relation ami n'existe pas", HttpStatus.NOT_FOUND);
+    }
+
+    return relationAmiExist;
+
+  }
   @UseGuards(JwtAuthGuard)
-  @ApiProperty()
   @Post(':id')
- 
-  async create(@Param('id') id: string,  @Request() req) {
+  async create(@Param('id') id: string, @Request() req) {
     console.log('test', req.user.userId);
     
 
     const user = await this.usersService.findUserByID(req.user.userId)//req.user.userId;
     const ami = await this.usersService.findUserByID(+id)//req.ami.amiId;
     console.log(user, ami);
-
-    const existingRelationAmi = await this.usersService.findAll();
+    const relationAmi = await this.amisService.findRelationAmiByID(+id)
     
-    await this.amisService.save(existingRelationAmi);
-     
-    
-    if (existingRelationAmi) {
-      throw new ConflictException('Friendship already exists');
-    }
 
     if (ami === req.user.userId) {
       throw new ConflictException('non valide')
@@ -53,6 +55,10 @@ export class AmisController {
     
     if (user.id === ami.id) {
       throw new ConflictException('Cannot send friend request to yourself');
+      
+    }
+    if (relationAmi) {
+      throw new ConflictException('Friendship already exists');
     }
     console.log(req);
     return await (await this.amisService.askFriend(user, ami));

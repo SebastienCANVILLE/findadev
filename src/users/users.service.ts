@@ -10,10 +10,7 @@ import { UpdateUserDto } from './dto/update-user.dto';
 */
 @Injectable()
 export class UsersService {
-  askFriend(user: User, ami: User) {
-    throw new Error('Method not implemented.');
-  }
-
+ 
   /** 
     * @method create :
     * Method permettant de créer un utlisateur suivant le modèle du CreatUserDto.

@@ -1,5 +1,4 @@
 import { BadRequestException, Injectable } from '@nestjs/common';
-import { Http2ServerRequest } from 'http2';
 import { User } from 'src/users/entities/user.entity';
 import { UsersService } from 'src/users/users.service';
 import { RelationId } from 'typeorm';
@@ -10,13 +9,9 @@ import { Ami } from './entities/ami.entity';
 
 @Injectable()
 export class AmisService {
-  save(existingRelationAmi: User[]) {
-    throw new BadRequestException('la relation existe déjà .');
-  }
   amiService: any;
-  usersService: any;
   removeAmi() {
-    throw new Error('suppression non autorisée.');
+    throw new Error('Method not implemented.');
   }
  
   async askFriend(user:User,ami:User): Promise<Ami> {
@@ -29,7 +24,7 @@ export class AmisService {
     relationAmi.user = user;
     relationAmi.ami = ami;
     
-    await this.usersService.save(relationAmi);
+    
     return await relationAmi.save();
     
   };
@@ -46,7 +41,10 @@ export class AmisService {
     }
     return relationAmi;
   } */
+  async findRelationAmiByID(id: number): Promise<Ami> { 
+    return await Ami.findOneBy({ id: id })
 
+  }
   
   async findAll() {
     return await Ami.find();
