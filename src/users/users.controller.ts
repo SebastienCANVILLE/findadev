@@ -45,7 +45,6 @@ export class UsersController {
 
 
   @Get(':id')
-<<<<<<< HEAD
   async findUserByID(@Param('id') id: string) {
 
     const userExist = await this.usersService.findUserByID(+id);
@@ -53,14 +52,6 @@ export class UsersController {
     if (!userExist) {
 
       throw new HttpException("L'utilisateur n'existe pas", HttpStatus.BAD_REQUEST);
-=======
-  findUserByID(@Param('id') id: string) {
-
-    const userExist = this.usersService.findUserByID(+id);
-
-    if (!userExist) {
-      throw new NotFoundException("L'utilisateur n'existe pas");
->>>>>>> 3ef9371f1eb796aa4ec8295bf74ec506faad00b9
     }
 
     return userExist;
@@ -69,7 +60,6 @@ export class UsersController {
 
 
   @Get('search/:pseudo')
-<<<<<<< HEAD
   async findUserByPseudo(@Param('pseudo') pseudo: string) {
 
     const userExist = await this.usersService.findByPseudo(pseudo);
@@ -80,10 +70,6 @@ export class UsersController {
     }
 
     return userExist;
-=======
-  async findByPseudo(@Param('pseudo') pseudo: string) {
-    return await this.usersService.findByPseudo(pseudo);
->>>>>>> 3ef9371f1eb796aa4ec8295bf74ec506faad00b9
   }
 
 
