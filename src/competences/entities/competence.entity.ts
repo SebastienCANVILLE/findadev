@@ -11,7 +11,7 @@ export class Competence extends BaseEntity {
     @Column()
     name: string;
 
-    @ManyToOne(() => User, user => user.competences)
-    users: User[];
+    @ManyToOne(() => User, user => user.competences, {onDelete : 'CASCADE'})
+    user: User;
 
 }
