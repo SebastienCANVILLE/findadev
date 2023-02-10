@@ -19,6 +19,7 @@ export class CompetencesController {
   async create(@Body() createCompetenceDto: CreateCompetenceDto, @Req() req) {
     // récupère l'id du user connecté
     const userIdLog = req.user.userId;
+    
 
     // récupère l'ensemble de user connecté (nom, prénom, adresse etc)
     const userLog = await this.usersService.findUserByID(userIdLog)
