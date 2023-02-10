@@ -41,8 +41,16 @@ export class AmisService {
     }
     return relationAmi;
   } */
-  async findRelationAmiByID(id: number): Promise<Ami> { 
-    return await Ami.findOneBy({ id: id })
+  async findRelationAmiByID(userId: number, amiId:number): Promise<Ami> { 
+    return await Ami.findOneBy({ user:{ id:userId }, ami :{ id : amiId}})
+    /* 
+    return await Ami.findOne({
+      where: [
+        { id: id },
+        { ami : { id : id }}
+      
+      ]
+    }) */
 
   }
   
