@@ -36,7 +36,6 @@ export class UsersController {
 
   }
 
-
   @Get()
   async findAll() {
 
@@ -146,7 +145,6 @@ export class UsersController {
 
     const userLog = req.user.userId
     const updateUser = await this.usersService.update(userLog, updateUserDto,);
-
 
     return {
       statusCode: 201,
