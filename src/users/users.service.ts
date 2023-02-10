@@ -3,6 +3,7 @@ import { CreateUserDto } from './dto/create-user.dto';
 import { User } from './entities/user.entity';
 import * as bcrypt from 'bcrypt'
 import { UpdateUserDto } from './dto/update-user.dto';
+import { ILike, In } from 'typeorm';
 
 
 /**@class UsersService
@@ -131,5 +132,21 @@ export class UsersService {
 
     return undefined;
   }
-
+ async test(id:number){
+  User.find({
+    select : {
+      password : false,
+      pseudo : true,
+      competences : {
+        name : true
+      }
+    },
+    relations : { competences : true},
+    where : {
+      id : id,
+      pseudo : ILike (`%p%`),
+      langages : In(["python", "css"])
+    }
+  })
+ }
 }
