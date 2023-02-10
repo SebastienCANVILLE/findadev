@@ -1,18 +1,22 @@
-import { ConflictException, Injectable } from '@nestjs/common';
+import { Injectable } from '@nestjs/common';
 import { CreateUserDto } from './dto/create-user.dto';
 import { User } from './entities/user.entity';
 import * as bcrypt from 'bcrypt'
 import { UpdateUserDto } from './dto/update-user.dto';
-import { UserInfo } from 'os';
 
+
+/**@class UsersService
+ * Une class permettant de gérer les requêtes SQL de plusieurs méthodes CRUD.
+*/
 @Injectable()
 export class UsersService {
 
+  /** 
+    * @method create :
+    * Method permettant de créer un utlisateur suivant le modèle du CreatUserDto.
+    * * Crypter le password grâce au hash/bcrypt lors de la création du compte client.
+    */
   async create(createUserDto: CreateUserDto): Promise<User> { // Promise (promet de te renvoyer un user)
-
-    /*     if (createUserDto.password !== createUserDto.password_confirm) {
-          throw new ConflictException("Mots de passe non identiques")
-        } */
 
     const user = User.create(createUserDto)
     user.salt = await bcrypt.genSalt();
@@ -24,39 +28,75 @@ export class UsersService {
 
   }
 
+  /** 
+    * @method findAll :
+    * Method permettant de rechercher tous utlisateurs.
+    */
   async findAll(): Promise<User[]> { // recherche de tous les users
     return await User.find();
   }
 
-  async findUserByID(id: number): Promise<User> { // recherche d'un user par id
+  /** 
+  * @method findAll :
+  * Method permettant de rechercher tous utlisateurs.
+  */
+  async findUserByID(id: number): Promise<User> { 
     return await User.findOneBy({ id: id })
 
   }
 
-  async findByPseudo(pseudo: string) {  // recherche par pseudo
+  /** 
+  * @method findByPseudo :
+  * Method permettant de rechercher tous un développeur par son pseudo.
+  */
+  async findByPseudo(pseudo: string) { 
     return await User.findOneBy({ pseudo });
   }
 
-  async findByCountry(country: string) {  // recherche par pays
-    return await User.find({ where : { country : country } });
+  /** 
+  * @method findByCountry :
+  * Method permettant de rechercher tous les dévellopeurs d'un pays.
+  */
+  async findByCountry(country: string) { 
+    return await User.find({ where: { country: country } });
   }
 
-  async findByCity(city: string) {  // recherche par ville
-    return await User.find({ where : { city : city } });
+  /** 
+  * @method findByCity :
+  * Method permettant de rechercher tous les développeurs d'une ville.
+  */
+  async findByCity(city: string) {  
+    return await User.find({ where: { city: city } });
   }
 
-  async findByDepartment(department: string) {  // recherche par department
-    return await User.find({ where : { department : department } });
+  /** 
+  * @method findByDepartment :
+  * Method permettant de rechercher tous les développeurs d'un département.
+  */
+  async findByDepartment(department: string) {  
+    return await User.find({ where: { department: department } });
   }
 
-  async findByRegion(region: string) {  // recherche par region
-    return await User.find( {where : { region : region}});
+  /** 
+  * @method findByRegion :
+  * Method permettant de rechercher tous les développeurs d'une région.
+  */
+  async findByRegion(region: string) {  
+    return await User.find({ where: { region: region } });
   }
 
-  async findByEmail(email: string) {  // recherche par email
+  /** 
+  * @method findByEmail :
+  * Method permettant de rechercher un utlisateurs via son email.
+  */
+  async findByEmail(email: string) { 
     return await User.findOneBy({ email });
   }
 
+  /** 
+  * @method update :
+  * Method permettant de metttre à jour son profil via un template définit par UpdateUserDto.
+  */
   async update(id: number, updateUserDto: UpdateUserDto): Promise<User> {
 
     const updateUser = await User.findOneBy({ id: id });
@@ -75,6 +115,11 @@ export class UsersService {
     return updateUser
   }
 
+  /** 
+  * @method deletedUser :
+  * Method permettant de supprimer l'utlisateur connecté.
+  * Avec cette méthode impossible qu'un utilisateur puisse supprimer un autre utilisateur via son id
+  */
   async deletedUser(id: number): Promise<User> { // permet la suppression de l'user par l'id
 
     const dataDeleted = await User.findOneBy({ id })
