@@ -15,5 +15,6 @@ export class Ami extends BaseEntity {
 
     @ManyToOne(() => User, user => user.amis)
     ami: User;
+  askFriend: string;
 
 }

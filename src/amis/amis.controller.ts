@@ -1,6 +1,7 @@
 import { Controller, Get, Post, Body, Patch, Param, Delete, ClassSerializerInterceptor } from '@nestjs/common';
 import { Query, Req, Request, UseGuards, UseInterceptors } from '@nestjs/common/decorators';
 import { ConflictException, NotFoundException } from '@nestjs/common/exceptions';
+import { ApiBody, ApiParam, ApiProperty } from '@nestjs/swagger';
 import { JwtAuthGuard } from 'src/auth/jwt-auth.guard';
 import { UpdateUserDto } from 'src/users/dto/update-user.dto';
 import { UsersService } from 'src/users/users.service';
@@ -18,14 +19,25 @@ export class AmisController {
     private readonly usersService: UsersService,
   ) { };
   @UseGuards(JwtAuthGuard)
+  @ApiProperty()
   @Post(':id')
-  async create(@Param('id') id: string, @Request() req) {
+ 
+  async create(@Param('id') id: string,  @Request() req) {
     console.log('test', req.user.userId);
     
 
     const user = await this.usersService.findUserByID(req.user.userId)//req.user.userId;
     const ami = await this.usersService.findUserByID(+id)//req.ami.amiId;
     console.log(user, ami);
+
+    const existingRelationAmi = await this.usersService.findAll();
+    
+    await this.amisService.save(existingRelationAmi);
+     
+    
+    if (existingRelationAmi) {
+      throw new ConflictException('Friendship already exists');
+    }
 
     if (ami === req.user.userId) {
       throw new ConflictException('non valide')
@@ -43,7 +55,7 @@ export class AmisController {
       throw new ConflictException('Cannot send friend request to yourself');
     }
     console.log(req);
-    return await this.amisService.askFriend(user, ami);
+    return await (await this.amisService.askFriend(user, ami));
   }
 }
   /*   const existingFriendship = await this.usersService.findOne({
