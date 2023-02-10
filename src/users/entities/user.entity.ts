@@ -4,20 +4,24 @@ import { Competence } from 'src/competences/entities/competence.entity';
 import { Ami } from 'src/amis/entities/ami.entity';
 import { Langage } from 'src/langages/entities/langage.entity';
 import { Exclude } from 'class-transformer';
+import { ApiProperty } from '@nestjs/swagger';
 
 
 @Entity('users')
 export class User extends BaseEntity {
-
+    @ApiProperty()
     @PrimaryGeneratedColumn()
     id: number;
 
+    @ApiProperty()
     @Column()
     firstname: string;
 
+    @ApiProperty()
     @Column()
     lastname: string;
 
+    @ApiProperty()
     @Column({
         unique: true
     })
