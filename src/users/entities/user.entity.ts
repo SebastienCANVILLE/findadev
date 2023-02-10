@@ -65,7 +65,7 @@ export class User extends BaseEntity {
     @Exclude()
     role: string;
 
-    @OneToMany(() => Competence, competence => competence.users, { eager: true })
+    @OneToMany(() => Competence, competence => competence.user, { eager: true })
     competences: Competence[]
 
     @OneToMany(() => Langage, langage => langage.users, { eager: true })

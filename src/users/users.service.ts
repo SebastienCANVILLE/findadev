@@ -10,9 +10,9 @@ export class UsersService {
 
   async create(createUserDto: CreateUserDto): Promise<User> { // Promise (promet de te renvoyer un user)
 
-/*     if (createUserDto.password !== createUserDto.password_confirm) {
-      throw new ConflictException("Mots de passe non identiques")
-    } */
+    /*     if (createUserDto.password !== createUserDto.password_confirm) {
+          throw new ConflictException("Mots de passe non identiques")
+        } */
 
     const user = User.create(createUserDto)
     user.salt = await bcrypt.genSalt();
@@ -29,7 +29,7 @@ export class UsersService {
   }
 
   async findUserByID(id: number): Promise<User> { // recherche d'un user par id
-    return await User.findOneBy({ id : id})
+    return await User.findOneBy({ id: id })
 
   }
 
@@ -37,23 +37,23 @@ export class UsersService {
     return await User.findOneBy({ pseudo });
   }
 
-  async findByCountry(country: string) {  // recherche par pseudo
-    return await User.findOneBy({ country });
+  async findByCountry(country: string) {  // recherche par pays
+    return await User.find({ where : { country : country } });
   }
 
-  async findByCity(city: string) {  // recherche par pseudo
-    return await User.findOneBy({ city });
+  async findByCity(city: string) {  // recherche par ville
+    return await User.find({ where : { city : city } });
   }
 
-  async findByDepartment(department: string) {  // recherche par pseudo
-    return await User.findOneBy({ department });
+  async findByDepartment(department: string) {  // recherche par department
+    return await User.find({ where : { department : department } });
   }
 
-  async findByRegion(region: string) {  // recherche par pseudo
-    return await User.findOneBy({ region });
+  async findByRegion(region: string) {  // recherche par region
+    return await User.find( {where : { region : region}});
   }
 
-  async findByEmail(email: string) {  // recherche par pseudo
+  async findByEmail(email: string) {  // recherche par email
     return await User.findOneBy({ email });
   }
 

@@ -1,9 +1,8 @@
-import { Controller, Get, Post, Body, Param, Delete, ClassSerializerInterceptor, NotFoundException, HttpException, HttpStatus, ParseIntPipe, ConflictException } from '@nestjs/common';
+import { Controller, Get, Post, Body, Param, Delete, ClassSerializerInterceptor, HttpException, HttpStatus, ConflictException } from '@nestjs/common';
 import { UsersService } from './users.service';
 import { CreateUserDto } from './dto/create-user.dto';
 import { Patch, Req, UseGuards, UseInterceptors } from '@nestjs/common/decorators';
 import { UpdateUserDto } from './dto/update-user.dto';
-import { request } from 'http';
 import { JwtAuthGuard } from 'src/auth/jwt-auth.guard';
 
 
@@ -21,28 +20,34 @@ export class UsersController {
     }
 
     const pseudoExist = await this.usersService.findByPseudo(createUserDto.pseudo);
-    
+
     if (pseudoExist) {
       throw new HttpException("Le pseudo est déjà attribué", HttpStatus.BAD_REQUEST);
     }
-    
+
     const emailExist = await this.usersService.findByEmail(createUserDto.email);
-    
+
     if (emailExist) {
       throw new HttpException("L'Email déjà utilisé", HttpStatus.BAD_REQUEST);
     }
 
     return await this.usersService.create(createUserDto);
-    
+
 
   }
 
 
   @Get()
-  findAll() {
-    return this.usersService.findAll();
-  }
+  async findAll() {
 
+    const userExist = await this.usersService.findAll();
+
+    if (!userExist) {
+      throw new HttpException("L'utilisateur n'existe pas", HttpStatus.NOT_FOUND);
+    }
+
+    return userExist;
+  }
 
   @Get(':id')
   async findUserByID(@Param('id') id: string) {
@@ -50,36 +55,96 @@ export class UsersController {
     const userExist = await this.usersService.findUserByID(+id);
 
     if (!userExist) {
-
-      throw new HttpException("L'utilisateur n'existe pas", HttpStatus.BAD_REQUEST);
+      throw new HttpException("L'utilisateur n'existe pas", HttpStatus.NOT_FOUND);
     }
 
     return userExist;
 
   }
-
 
   @Get('search/:pseudo')
   async findUserByPseudo(@Param('pseudo') pseudo: string) {
 
-    const userExist = await this.usersService.findByPseudo(pseudo);
+    const pseudoExist = await this.usersService.findByPseudo(pseudo);
 
-    if (!userExist) {
+    if (!pseudoExist) {
 
-      throw new HttpException("Le pseudo n'existe pas", HttpStatus.BAD_REQUEST);
+      throw new HttpException("Le pseudo n'existe pas", HttpStatus.NOT_FOUND);
     }
 
-    return userExist;
+    return pseudoExist;
   }
 
+  @Get('country/:country')
+  async findByCountry(@Param('country') country: string) {
+
+    const countryExist = await this.usersService.findByCountry(country);
+
+    if (countryExist.length === 0) {
+
+      throw new HttpException("Pas de développeur dans ce pays", HttpStatus.NOT_FOUND);
+    }
+
+    return countryExist;
+  }
+
+  @Get('city/:city')
+  async findByCity(@Param('country') city: string) {
+
+    const cityExist = await this.usersService.findByCity(city);
+
+    if (cityExist.length === 0) {
+
+      throw new HttpException("Pas de développeur dans cette", HttpStatus.NOT_FOUND);
+    }
+
+    return cityExist;
+  }
+
+  @Get('department/:department')
+  async findByDepartment(@Param('department') department: string) {
+
+    const departmentExist = await this.usersService.findByDepartment(department);
+
+    if (departmentExist.length === 0) {
+
+      throw new HttpException("Pas de développeur dans ce département", HttpStatus.NOT_FOUND);
+    }
+
+    return departmentExist;
+  }
+
+  @Get('region/:region')
+  async findByRegion(@Param('region') region: string) {
+
+    const regionExist = await this.usersService.findByRegion(region);
+
+    if (regionExist.length === 0) {
+
+      throw new HttpException("Pas de développeur dans cette région", HttpStatus.NOT_FOUND);
+    }
+
+    return regionExist;
+  }
+
+  @Get('email/:email')
+  async findUserByEmail(@Param('email') email: string) {
+
+    const emailExist = await this.usersService.findByEmail(email);
+
+    if (!emailExist) {
+
+      throw new HttpException("L'Email n'existe pas", HttpStatus.NOT_FOUND);
+    }
+
+    return emailExist;
+  }
 
   @UseGuards(JwtAuthGuard)
   @Patch()
   async update(@Body() updateUserDto: UpdateUserDto, @Req() req) {
 
-
     const userLog = req.user.userId
-
     const updateUser = await this.usersService.update(userLog, updateUserDto,);
 
 

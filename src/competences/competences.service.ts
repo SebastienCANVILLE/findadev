@@ -3,23 +3,26 @@ import { CreateCompetenceDto } from './dto/create-competence.dto';
 import { UpdateCompetenceDto } from './dto/update-competence.dto';
 import { Competence } from './entities/competence.entity';
 
-
 @Injectable()
 export class CompetencesService {
-  async createCompetences(createCompetenceDto: CreateCompetenceDto | any): Promise<Competence> {
-    const newCompetence = await Competence.save(createCompetenceDto);
+  async createCompetences(userLog, createCompetenceDto: CreateCompetenceDto): Promise<Competence> {
+
+    const newCompetence = new Competence();
+    newCompetence.name = createCompetenceDto.name
+    newCompetence.user = userLog
+    newCompetence.save();
     return newCompetence;
   }
 
-  async findAll() {
-    return await Competence.find();
+  async findAll(): Promise<Competence[]> {
+    return await Competence.find(); // ou return await Competence.find({relations: {user: true}}); si on veut la relation User.
   }
 
   async findOne(id: number): Promise<Competence> {
-    return await Competence.findOneBy({ id })
+    /* return await Competence.findOneBy({ id }) // */ return await Competence.findOne({ relations: { user: true }, where: { id } })
   }
 
-  async update(id: number, updateCompetenceDto: UpdateCompetenceDto | any): Promise<Competence> {
+  async update(id: number, updateCompetenceDto: UpdateCompetenceDto): Promise<Competence> {
     const newCompetence = await Competence.update(id, updateCompetenceDto);
 
     if (newCompetence) {
