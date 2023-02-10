@@ -12,6 +12,6 @@ export class Competence extends BaseEntity {
     name: string;
 
     @ManyToOne(() => User, user => user.competences)
-    users: User[];
+    user: User;
 
 }

@@ -1,4 +1,4 @@
-import { Controller, Get, Post, Body, Param, Delete, ClassSerializerInterceptor, NotFoundException, HttpException, HttpStatus, ParseIntPipe, ConflictException } from '@nestjs/common';
+import { Controller, Get, Post, Body, Param, Delete, ClassSerializerInterceptor, HttpException, HttpStatus, ConflictException } from '@nestjs/common';
 import { UsersService } from './users.service';
 import { CreateUserDto } from './dto/create-user.dto';
 import { Patch, Req, UseGuards, UseInterceptors } from '@nestjs/common/decorators';
@@ -20,19 +20,19 @@ export class UsersController {
     }
 
     const pseudoExist = await this.usersService.findByPseudo(createUserDto.pseudo);
-    
+
     if (pseudoExist) {
       throw new HttpException("Le pseudo est déjà attribué", HttpStatus.BAD_REQUEST);
     }
-    
+
     const emailExist = await this.usersService.findByEmail(createUserDto.email);
-    
+
     if (emailExist) {
       throw new HttpException("L'Email déjà utilisé", HttpStatus.BAD_REQUEST);
     }
 
     return await this.usersService.create(createUserDto);
-    
+
 
   }
 
