@@ -9,7 +9,10 @@ import { Ami } from './entities/ami.entity';
 
 @Injectable()
 export class AmisService {
-  usersService: any;
+  amiService: any;
+  removeAmi() {
+    throw new Error('Method not implemented.');
+  }
  
   async askFriend(user:User,ami:User): Promise<Ami> {
   
@@ -28,7 +31,7 @@ export class AmisService {
   // puis trouve la relation d'amitié entre les 2 users.
 
   async getRelationAmiStatus(user: string, ami: string) {
-    const relationAmi = await this.usersService.findByUserPseudo(user,ami)
+    const relationAmi = await this.amiService.findByUserPseudo(user,ami)
     if (!user || !ami) {
       return 'user pas trouvé';
     }

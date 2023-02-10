@@ -7,6 +7,9 @@ import { UserInfo } from 'os';
 
 @Injectable()
 export class UsersService {
+  askFriend(user: User, ami: User) {
+    throw new Error('Method not implemented.');
+  }
 
   async create(createUserDto: CreateUserDto): Promise<User> { // Promise (promet de te renvoyer un user)
 
