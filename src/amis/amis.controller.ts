@@ -17,13 +17,17 @@ export class AmisController {
     private readonly usersService: UsersService,
   ) { };
 
+  @UseGuards(JwtAuthGuard)
   @Get(':id')
-  async findRelationAmiByID(@Param('id') id: string) {
+  async findRelationAmiByID(@Param('id') id: string, @Request() req) {
+    
+    const user = await this.usersService.findUserByID(req.user.userId)//req.user.userId;
+    const ami = await this.usersService.findUserByID(+id)//req.ami.amiId;
 
-    const relationAmiExist = await this.amisService.findRelationAmiByID(+id);
+    const relationAmiExist = await this.amisService.findRelationAmiByID(user.id,ami.id);
 
     if (!relationAmiExist) {
-      throw new HttpException("Lla relation ami n'existe pas", HttpStatus.NOT_FOUND);
+      throw new HttpException("La relation ami n'existe pas", HttpStatus.NOT_FOUND);
     }
 
     return relationAmiExist;
@@ -38,7 +42,7 @@ export class AmisController {
     const user = await this.usersService.findUserByID(req.user.userId)//req.user.userId;
     const ami = await this.usersService.findUserByID(+id)//req.ami.amiId;
     console.log(user, ami);
-    const relationAmi = await this.amisService.findRelationAmiByID(+id)
+    const relationAmi = await this.amisService.findRelationAmiByID(user.id,ami.id)
     
 
     if (ami === req.user.userId) {
@@ -61,7 +65,7 @@ export class AmisController {
       throw new ConflictException('Friendship already exists');
     }
     console.log(req);
-    return await (await this.amisService.askFriend(user, ami));
+    return await this.amisService.askFriend(user, ami);
   }
 }
   /*   const existingFriendship = await this.usersService.findOne({
