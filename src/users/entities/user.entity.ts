@@ -27,40 +27,51 @@ export class User extends BaseEntity {
     })
     pseudo: string;
 
+    @ApiProperty()
     @Column({
         unique: true
     })
     email: string;
 
+    @ApiProperty()
     @Column()
     @Exclude()
     password: string;
 
+    @ApiProperty()
     @Column()
     adress_line: string;
 
+    @ApiProperty()
     @Column()
     zipCode: string;
 
+    @ApiProperty()
     @Column()
     department: string;
 
+    @ApiProperty()
     @Column()
     city: string;
 
+    @ApiProperty()
     @Column()
     region: string;
 
+    @ApiProperty()
     @Column()
     country: string;
 
+    @ApiProperty()
     @Column()
     presentation: string;
 
+    @ApiProperty()
     @Column()
     @Exclude()
     salt: string;
 
+    @ApiProperty()
     @Column({
         type: 'enum',
         enum: UserRoleEnum,

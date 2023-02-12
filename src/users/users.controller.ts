@@ -4,7 +4,8 @@ import { CreateUserDto } from './dto/create-user.dto';
 import { Patch, Req, UseGuards, UseInterceptors } from '@nestjs/common/decorators';
 import { UpdateUserDto } from './dto/update-user.dto';
 import { JwtAuthGuard } from 'src/auth/jwt-auth.guard';
-import { ApiBody, ApiParam, ApiProperty } from '@nestjs/swagger';
+import { ApiProperty, ApiTags } from '@nestjs/swagger';
+import { SearchUserDto } from './dto/search-user.dto';
 
 /**@class UsersController
  * 
@@ -13,6 +14,7 @@ import { ApiBody, ApiParam, ApiProperty } from '@nestjs/swagger';
  * * De contrôler les informations entrantes, de les vérifier avant de les envoyer en base de données, suivant un protocole précis et renseigné.
  * * Celle-ci est dédiée à la création de comptes, à la recherche via des critères, à la modifification de données et à la suppression d'un compte dévellopeur.
  */
+@ApiTags('Users')
 @UseInterceptors(ClassSerializerInterceptor) // permet de cacher les données lors d'une requête (password etc...)
 @Controller('users')
 
@@ -28,6 +30,7 @@ export class UsersController {
    * * Renvoyer un message d'avertissement en cas d'erreur ou de succès.
    */
   @Post('register')
+  @ApiProperty()
   async create(@Body() createUserDto: CreateUserDto) {
 
     if (createUserDto.password !== createUserDto.password_confirm) {
@@ -59,6 +62,7 @@ export class UsersController {
   * * Renvoyer un message d'avertissement en cas d'erreur ou de succès..
   */
   @Get()
+  @ApiProperty()
   async findAll() {
 
     const userExist = await this.usersService.findAll();
@@ -78,12 +82,13 @@ export class UsersController {
    * * Renvoyer un message d'avertissement en cas d'erreur ou de succès.
   */
   @Get(':id')
+  @ApiProperty()
   findUserByID(@Param('id') id: string) {
 
     const userExist = this.usersService.findUserByID(+id);
 
     if (!userExist) {
-      throw new NotFoundException("L'utilisateur n'existe pas");
+      throw new HttpException("L'utilisateur n'existe pas", HttpStatus.NOT_FOUND);
     }
     return userExist;
   }
@@ -95,7 +100,8 @@ export class UsersController {
   * * Controler les données entrantes lors de la consultation d'un développeurs via son pseudo.
   * * Renvoyer un message d'avertissement en cas d'erreur ou de succès.
   */
-  @Get('search/:pseudo')
+  @Get('pseudo/:pseudo')
+  @ApiProperty()
   async findByPseudo(@Param('pseudo') pseudo: string) {
 
     const pseudoExist = await this.usersService.findByPseudo(pseudo);
@@ -116,6 +122,7 @@ export class UsersController {
   * * Renvoyer un message d'avertissement en cas d'erreur ou de succès..
   */
   @Get('country/:country')
+  @ApiProperty()
   async findByCountry(@Param('country') country: string) {
 
     const countryExist = await this.usersService.findByCountry(country);
@@ -136,6 +143,7 @@ export class UsersController {
   * * Renvoyer un message d'avertissement en cas d'erreur ou de succès..
   */
   @Get('city/:city')
+  @ApiProperty()
   async findByCity(@Param('country') city: string) {
 
     const cityExist = await this.usersService.findByCity(city);
@@ -156,6 +164,7 @@ export class UsersController {
   * * Renvoyer un message d'avertissement en cas d'erreur ou de succès..
   */
   @Get('department/:department')
+  @ApiProperty()
   async findByDepartment(@Param('department') department: string) {
 
     const departmentExist = await this.usersService.findByDepartment(department);
@@ -176,6 +185,7 @@ export class UsersController {
   * * Renvoyer un message d'avertissement en cas d'erreur ou de succès..
   */
   @Get('region/:region')
+  @ApiProperty()
   async findByRegion(@Param('region') region: string) {
 
     const regionExist = await this.usersService.findByRegion(region);
@@ -196,6 +206,7 @@ export class UsersController {
   * * Renvoyer un message d'avertissement en cas d'erreur ou de succès..
   */
   @Get('email/:email')
+  @ApiProperty()
   async findUserByEmail(@Param('email') email: string) {
 
     const emailExist = await this.usersService.findByEmail(email);
@@ -218,6 +229,7 @@ export class UsersController {
   */
   @UseGuards(JwtAuthGuard)
   @Patch()
+  @ApiProperty()
   async update(@Body() updateUserDto: UpdateUserDto, @Req() req) {
 
     const userLog = req.user.userId
@@ -242,6 +254,7 @@ export class UsersController {
   */
   @UseGuards(JwtAuthGuard)
   @Delete()
+  @ApiProperty()
   async deletedUser(@Req() req) {
 
     const id = req.user.userId
@@ -259,5 +272,24 @@ export class UsersController {
     }
 
     return { message: `Le compte a bien été supprimé` };
+  }
+
+
+  /** 
+  * @method search :
+  * 
+  * Une méthode permettant de :
+  * * Controler les données entrantes lors de la recherche d'un profil d'un développeur.
+  * * Renvoyer un message d'avertissement en cas d'erreur ou de succès.
+  */
+  @Get('search/all')
+  @ApiProperty()
+  async search(@Body() searchUserDto: SearchUserDto) {
+    console.log(searchUserDto);
+    
+    const searchUser = await this.usersService.searchUser(searchUserDto);
+
+    return searchUser 
+
   }
 }
