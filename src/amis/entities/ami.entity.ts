@@ -24,5 +24,4 @@ export class Ami extends BaseEntity {
     ami: User;
   askFriend: string;
   pseudo: string;
-
 }

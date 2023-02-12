@@ -80,8 +80,8 @@ export class AmisController {
     return await this.amisService.askFriend(user, ami);
   }
 
-  @Delete(':id')
   @UseGuards(JwtAuthGuard)
+  @Delete(':id')
   @ApiProperty()
   async removeRelationAmi(@Request() req, @Param('id') id: string) {
     const user = await this.usersService.findUserByID(req.user.userId);
@@ -95,6 +95,8 @@ export class AmisController {
     await this.amisService.removeRelationAmi(relationAmi.id);
     return { statusCode: 200, message: 'relation ami supprimée' };
   }
+
+  
   @Patch(':id')
   @UseGuards(JwtAuthGuard)
   async updateRelationAmi(@Request() req, @Param('id') id: string) {
@@ -107,11 +109,27 @@ export class AmisController {
       return { statusCode: 404, message: 'Relation ami introuvable' };
     }
 
-    await this.amisService.update(user.id, ami);
+    await this.amisService.updateRelationAmi(+id);
     return { statusCode: 200, message: 'Relation ami mise à jour' };
   }
 
+  @ApiProperty()
+  async deletedAmi(@Req() req) {
+    const id = req.user.userId
+    const ami = await this.amisService.findOneById(+id);
+
+    if (!ami) {
+      throw new HttpException(`L'ami demandé n'existe pas`, HttpStatus.NOT_FOUND);
+    }
+    const deleted = await this.amisService.remove(id);
+    if (!deleted) {
+      throw new HttpException('Erreur Server', HttpStatus.INTERNAL_SERVER_ERROR);
+    }
+    return { message: `L'ami a bien été supprimé` };
+  }
+
 }
+
 
 
 

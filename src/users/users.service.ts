@@ -12,6 +12,7 @@ import { SearchUserDto } from './dto/search-user.dto';
 */
 @Injectable()
 export class UsersService {
+  deletedAmi: any;
 
   /** 
     * @method create :
