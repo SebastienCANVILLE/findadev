@@ -3,6 +3,8 @@ import { CreateUserDto } from './dto/create-user.dto';
 import { User } from './entities/user.entity';
 import * as bcrypt from 'bcrypt'
 import { UpdateUserDto } from './dto/update-user.dto';
+import { ILike, In } from 'typeorm';
+import { SearchUserDto } from './dto/search-user.dto';
 
 
 /**@class UsersService
@@ -10,7 +12,7 @@ import { UpdateUserDto } from './dto/update-user.dto';
 */
 @Injectable()
 export class UsersService {
- 
+
   /** 
     * @method create :
     * Method permettant de créer un utlisateur suivant le modèle du CreatUserDto.
@@ -40,7 +42,9 @@ export class UsersService {
   * @method findAll :
   * Method permettant de rechercher tous utlisateurs.
   */
-  async findUserByID(id: number): Promise<User> { 
+  async findUserByID(id: number): Promise<User> {
+    console.log(id);
+    
     return await User.findOneBy({ id: id })
 
   }
@@ -49,7 +53,7 @@ export class UsersService {
   * @method findByPseudo :
   * Method permettant de rechercher tous un développeur par son pseudo.
   */
-  async findByPseudo(pseudo: string) { 
+  async findByPseudo(pseudo: string) {
     return await User.findOneBy({ pseudo });
   }
 
@@ -57,7 +61,7 @@ export class UsersService {
   * @method findByCountry :
   * Method permettant de rechercher tous les dévellopeurs d'un pays.
   */
-  async findByCountry(country: string) { 
+  async findByCountry(country: string) {
     return await User.find({ where: { country: country } });
   }
 
@@ -65,7 +69,7 @@ export class UsersService {
   * @method findByCity :
   * Method permettant de rechercher tous les développeurs d'une ville.
   */
-  async findByCity(city: string) {  
+  async findByCity(city: string) {
     return await User.find({ where: { city: city } });
   }
 
@@ -73,7 +77,7 @@ export class UsersService {
   * @method findByDepartment :
   * Method permettant de rechercher tous les développeurs d'un département.
   */
-  async findByDepartment(department: string) {  
+  async findByDepartment(department: string) {
     return await User.find({ where: { department: department } });
   }
 
@@ -81,7 +85,7 @@ export class UsersService {
   * @method findByRegion :
   * Method permettant de rechercher tous les développeurs d'une région.
   */
-  async findByRegion(region: string) {  
+  async findByRegion(region: string) {
     return await User.find({ where: { region: region } });
   }
 
@@ -89,7 +93,7 @@ export class UsersService {
   * @method findByEmail :
   * Method permettant de rechercher un utlisateurs via son email.
   */
-  async findByEmail(email: string) { 
+  async findByEmail(email: string) {
     return await User.findOneBy({ email });
   }
 
@@ -130,6 +134,43 @@ export class UsersService {
     }
 
     return undefined;
+  }
+
+  /** 
+  * @method searchUser :
+  * Method permettant en une seul requête de rechercher un développeur grâce à ses caractéristiques.
+  * *Par pseudo, compétences, langages, pays, département, région ou ville.
+  */
+  async searchUser(searchUserDto: SearchUserDto): Promise<User[]> {
+
+    const searchUser = await User.find({
+      select: {
+        pseudo: true,
+        competences: {
+          name: true
+        },
+        langages: {
+          name: true
+        },
+        country: true,
+        department: true,
+        region: true,
+        city: true
+      },
+
+      relations: { competences: true, langages: true },
+      where: {
+        pseudo: ILike(`%${searchUserDto.pseudo || ''}%`),
+        competences: {name : ILike(`%${searchUserDto.competences || ''}%`)},
+        langages: {name :ILike(`%${searchUserDto.langages || ''}%`)},
+        country: ILike(`%${searchUserDto.country || ''}`),
+        department: ILike(`%${searchUserDto.department || ''}%`),
+        region: ILike(`%${searchUserDto.region || ''}%`),
+        city: ILike(`%${searchUserDto.city || ''}%`)
+      }
+    })
+
+    return searchUser
   }
 
 }
