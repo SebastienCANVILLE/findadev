@@ -6,6 +6,7 @@ import { ApiProperty, ApiTags } from "@nestjs/swagger";
 @ApiTags('amis')
 @Entity('amis')
 export class Ami extends BaseEntity {
+  
     @ApiProperty()
     @PrimaryGeneratedColumn()
     id: number
@@ -22,5 +23,5 @@ export class Ami extends BaseEntity {
     @ManyToOne(() => User, user => user.amis)
     ami: User;
   askFriend: string;
-
+  pseudo: string;
 }
