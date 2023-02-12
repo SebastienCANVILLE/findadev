@@ -80,12 +80,15 @@ export class User extends BaseEntity {
     @Exclude()
     role: string;
 
+    @ApiProperty()
     @OneToMany(() => Competence, competence => competence.user, { eager: true })
     competences: Competence[]
 
+    @ApiProperty()
     @OneToMany(() => Langage, langage => langage.users, { eager: true })
     langages: Langage[]
 
+    @ApiProperty()
     @OneToMany(() => Ami, ami => ami.user, { eager: true })
     amis: Ami[]
     status: any;
