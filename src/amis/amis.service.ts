@@ -1,4 +1,5 @@
-import { BadRequestException, Injectable } from '@nestjs/common';
+import { BadRequestException, ConflictException, Injectable, Param } from '@nestjs/common';
+import { ApiProperty } from '@nestjs/swagger';
 import { User } from 'src/users/entities/user.entity';
 import { UsersService } from 'src/users/users.service';
 import { RelationId } from 'typeorm';
@@ -8,70 +9,64 @@ import { Ami } from './entities/ami.entity';
 
 
 @Injectable()
+
 export class AmisService {
-  amiService: any;
-  removeAmi() {
-    throw new Error('Method not implemented.');
-  }
  
-  async askFriend(user:User,ami:User): Promise<Ami> {
-  
-    if (!user || !ami) {
-      throw new BadRequestException('User ou ami pas trouvé');
-    }
-   
+  amiService: any;
+  amisService: any;
+  removeRelationAmi: any;
+  //pour trouver les utilisateurs avec les noms d'utilisateur spécifiés,
+  // puis trouve la relation d'amitié entre les 2 users.
+  @ApiProperty()
+
+  async askFriend(user: User, ami: User): Promise<Ami> {
     const relationAmi = new Ami();
     relationAmi.user = user;
     relationAmi.ami = ami;
-    
-    
+
     return await relationAmi.save();
-    
+
   };
-  //pour trouver les utilisateurs avec les noms d'utilisateur spécifiés,
-  // puis trouve la relation d'amitié entre les 2 users.
 
-/*   async getRelationAmiStatus(user: string, ami: string) {
-    const relationAmi = await this.amiService.findByUserPseudo(user,ami)
-    if (!user || !ami) {
-      return 'user pas trouvé';
-    }
-    if (!relationAmi) {
-      return 'pas ami'
-    }
-    return relationAmi;
-  } */
-  async findRelationAmiByID(userId: number, amiId:number): Promise<Ami> { 
-    return await Ami.findOneBy({ user:{ id:userId }, ami :{ id : amiId}})
-    /* 
-    return await Ami.findOne({
-      where: [
-        { id: id },
-        { ami : { id : id }}
-      
-      ]
-    }) */
+  @ApiProperty()
 
+  // permet de trouver la relation ami
+  async findRelationAmiByID(userId: number, amiId: number) {
+    return await Ami.findOneBy({ user: { id: userId }, ami: { id: amiId } })
   }
-  
+
+  @ApiProperty()
   async findAll() {
     return await Ami.find();
   }
 
-  async findOne(id: number) {
-    return await Ami.findOneBy({ id: id })
-  }
-  async update(id: number, updateAmiDto: UpdateAmiDto) {
-    await Ami.update(id, updateAmiDto)
-    return this.findOne(id)
+ 
+   @ApiProperty()
+  async update(id: number, updateAmiDto: UpdateAmiDto): Promise<Ami> {
+    const updateAmi = await Ami.findOneBy({ id: id });
+/* 
+    updateAmi.pseudo = updateAmiDto.pseudo;
+    updateAmi.adress_line = updateAmiDto.adress_line;
+    updateAmi.zipCode = updateAmiDto.zipCode;
+    updateAmi.city = updateAmiDto.city;
+    updateAmi.department = updateAmiDto.department;
+    updateAmi.country = updateAmiDto.country;
+    updateAmi.region = updateAmiDto.region;
+    updateAmi.presentation = updateAmiDto.presentation;
+
+    await Ami.save(updateAmi); */
+
+    return updateAmi
+  } 
+
+  @ApiProperty()
+  async remove(@Param() userPseudo: string, amiPseudo: string) {
+     const relationAmiDeleted = await Ami.find();
+      await this.amisService.deleteByPseudo(userPseudo,amiPseudo);
+      if (relationAmiDeleted) {
+        return relationAmiDeleted;
+      }
+      return undefined;
+    } 
   }
 
-  async remove(id: number) {
-    const dataDeleted = Ami.findBy({ id });
-    await Ami.delete(id);
-    if (dataDeleted) {
-      return dataDeleted;
-    }
-    return undefined;
-  }
-}
